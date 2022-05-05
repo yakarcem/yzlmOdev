@@ -3,15 +3,64 @@
  */
 package yzlmOdev;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-
-
-        
-    }
+import static spark.Spark.get;
+ import static spark.Spark.port;
+ import static spark.Spark.post;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.Map;
+ import spark.ModelAndView;
+ import spark.template.mustache.MustacheTemplateEngine;
+ public class App
+ {
+ public String getGreeting() {
+ return "Hello world.";
+ }
+ public static boolean CarpTopla(int bir,int iki,int uc) {
+boolean deger=false;
+int toplam=bir+iki+uc;
+if(toplam/3 >= 50 ){
+    deger=true;
 }
+ return deger;
+ }
+ public static void main(String[] args) {
+ port(getHerokuAssignedPort());
+ get("/", (req, res) -> "Hello, World");
+ post("/compute", (req, res) -> {
+
+ String input1 = req.queryParams("input1").replaceAll("\\s","");
+ int input1AsInt = Integer.parseInt(input1);
+ String input2 = req.queryParams("input2").replaceAll("\\s","");
+ int input2AsInt = Integer.parseInt(input2);
+ String input3 = req.queryParams("input3").replaceAll("\\s","");
+ int input3AsInt = Integer.parseInt(input3);
+ 
+ boolean result = App.CarpTopla(input1AsInt, input2AsInt,input3AsInt);
+ Map<String, String> map = new HashMap<String, String>();
+if(result == true){
+    map.put("result", "Gecti");
+}else{
+    map.put("result", "Kaldı");
+}
+ return new ModelAndView(map, "compute.mustache");
+ }, new MustacheTemplateEngine());
+
+
+ get("/compute",
+ (rq, rs) -> {
+ Map<String, String> map = new HashMap<String, String>();
+ map.put("result", "not computed yet!");
+ return new ModelAndView(map, "compute.mustache");
+ },
+ new MustacheTemplateEngine());
+ }
+ static int getHerokuAssignedPort() {
+ ProcessBuilder processBuilder = new ProcessBuilder();
+ if (processBuilder.environment().get("PORT") != null) {
+ return Integer.parseInt(processBuilder.environment().get("PORT"));
+ }
+ return 2525; //return default port if heroku-port isn't set (i.e. on localhost)
+ }
+}
+

@@ -11,4 +11,36 @@ class AppTest {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
     }
-}
+
+    @Test void TrueParameter(){
+        int bir=55;
+        int iki=42;
+        int uc =77;
+
+        assertTrue(App.CarpTopla(bir, iki, uc));
+    }
+    @Test void falseParameter(){
+        int bir=55;
+        int iki=42;
+        int uc =-77;
+
+        assertFalse(App.CarpTopla(bir, iki, uc));
+        
+    }
+
+    @Test void false2Parameter(){
+        int bir=55;
+        int iki=-42;
+        int uc =77;
+
+        assertFalse(App.CarpTopla(bir, iki, uc));
+        
+    }
+
+    @Test void false3Parameter(){
+        int bir=-55;
+        int iki=-42;
+        int uc =77;
+
+        assertFalse(App.CarpTopla(bir, iki, uc));
+}}
